@@ -1,16 +1,5 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[6]:
-
-
 import numpy as np
 import itertools 
-
-
-# In[10]:
-
-
 #This class represents an instance of the board game othello. The rules are implemented as well as a simple command
 # line interface
 class Othello:
@@ -140,10 +129,6 @@ class Othello:
         copy.board = np.copy(self.board)
         return copy
                         
-
-
-# In[ ]:
-
 
 
 
