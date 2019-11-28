@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[30]:
-
-
 import numpy as np
 import itertools 
 import pickle
@@ -13,9 +7,6 @@ from random import choice, randrange, uniform, randint
 
 # # Player 
 # This is the superclass used for all players. 
-
-# In[2]:
-
 
 #Superclass Player, 
 class Player: 
@@ -67,10 +58,6 @@ class Player:
 
 # ## Randomplayer
 # Randomly picks the next action from a list of all possible actions 
-
-# In[24]:
-
-
 class RandomPlayer(Player):       
     def move(self):
         super().move()
@@ -85,9 +72,6 @@ class RandomPlayer(Player):
 
 # ## Probability functions
 # Functions below are used to calculate probability of win given a certain state (assuming all actions are random). i.e. if all possible combinations of actions are taken from a certain state, how often do they result in a win. These methods cannot actually be executed right now because they rely on methods that I changed and put in the Othello class. 
-
-# In[25]:
-
 
 # The two functions below together calculates the probability that color will win, given that they make move. 
 def probabilityofwin(board, move, color): 
@@ -172,8 +156,6 @@ def allpossibleboardsandprobs(boardsize):
 # ## ProbabilityPlayer
 # Uses brute force to calculate all possible outcomes, assign win probability for possible next actions and chooses next action to maximize win probability. Can use previously calculated win probabilities from file if path is specified. 
 
-# In[34]:
-
 
 class ProbabilityPlayer(Player):
     def __init__(self, game, probdict = None, probdict_file = None):
@@ -210,9 +192,6 @@ class ProbabilityPlayer(Player):
 
 # ## RLPlayer
 # Reinforcement learning player (epsilon-greedy). Keeps a table action_value_map to map string representations of boards to values (ranging between -win_value and win_value). Boards representing finished games will either have value win_value (if win), -win_value (if loose) or 0 (if draw). After a game is finished the values should be updating s.t. $$ V(a_{i})_{new} := V(a_{i})_{old} + lr*(V(a_{i+1})-V(a_{i})_{old}) $$ i.e. it will increase if it leads to higher ensuing values and decrease if it leads to lower ensuing values. Values are all initialized to starting_values. The Player will choose a random action a fraction of the time, specified by epsilon. 
-
-# In[42]:
-
 
 class RLPlayer(Player): 
     def __init__(self, game, epsilon = 0.1, starting_values = 0, win_value = 1, lr = 0.1):
@@ -281,8 +260,6 @@ class RLPlayer(Player):
 
 # ## NNPlayer
 # Similar to RLPlayer, but uses neural network to map boards (actions) to values ranging between -1 and 1. When a game is finished, all actions during the game will be assigned the highest value, and the network will perform one gradient descent step to fit these new action-value pairs. The idea is that the player will recognize a board even if it has not seen that specific board (because it has seen similar ones before), and have some perception of the value of the board. 
-
-# In[7]:
 
 
 class NNPlayer(Player):
@@ -377,8 +354,6 @@ class NNPlayer(Player):
 # Like the above, but instead of choosing action in order to maximize value, it chooses action from probabability distribution proportional to the values. i.e when choosing between action A with value 1, and action B with value 0, 
 # it will choose action A in 66% of the cases (as values range from -1 to 1)
 
-# In[29]:
-
 
 class NNPlayer_mod(Player):
     def __init__(self, game, epsilon = 0, lr = 0.0001, opt = 'adam'):
@@ -445,7 +420,8 @@ class NNPlayer_mod(Player):
         self.epsilon = epsilon 
         self.train_epsilon = epsilon
         return
-                
+    
+# Takes into account not only who won, but also by how much, when updating values.                 
 class NNPlayer_2(NNPlayer):
     def __init__(self, game, epsilon = 0, lr = 0.0001, opt = 'adam'):
         super().__init__(game, epsilon, lr, opt)
@@ -492,6 +468,7 @@ class NNPlayer_deepernetwork(NNPlayer):
         return
 
 
+# Uses minimax tree search to choose next move
 class MiniMaxPlayer(Player):
     
     def __init__(self, game, n = 1):
